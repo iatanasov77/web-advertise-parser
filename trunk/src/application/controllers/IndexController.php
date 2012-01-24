@@ -1,6 +1,4 @@
 <?php
-/* E8n64_Vtora */
-require_once 'VsTinyMce/VsTinyMce.php';
 
 /**
  * 
@@ -146,7 +144,7 @@ class IndexController extends Zend_Controller_Action
     	}
 		$this->view->assign('currentUrl', $url);
     	
-		$oEditor =  new VsTinyMce('tmceEdit');
+		$oEditor =  new VS_TinyMce('tmceEdit');
 		$oEditor->setStylesheet('/css/browser.css');
 		$oEditor->setValue($html);
 		
