@@ -1,0 +1,192 @@
+<!-- edit.phtml -->
+
+<script type="text/javascript">
+	var bAdsInside = 0;
+	var StatusRegistry = {<?php echo $this->jsStatusRegistry; ?>};		
+</script>
+
+<script type="text/javascript" src="/parser/parser.js"></script>
+
+	<form id="formProject" name="formProject" action="<?php echo $this->url(); ?>" method="post" >
+		<div id="editorFrame">
+			<div id="mceUrl">
+				<input type="text" size="100" name="currentUrl" value="<?php echo $this->currentUrl; ?>" />
+				<input type="button" value="Browse" />
+			</div>
+			<div id="mceEditor"><?php echo $this->oEditor->fetch(950, 400); ?></div>
+			<div style="margin-top: 20px;"><div style="margin-right: 10px; float: left;">Current Field: </div><div id="currentField" style="float: left;"></div></div>
+		</div>
+
+		<br class="clear" />
+		<br class="clear" />
+
+	
+		<input type="hidden" name="formAction" value="" />
+		<input type="hidden" name="projectId" value="<?php echo $this->oProject->id; ?>" />
+		<input type="hidden" name="StatusRegistry" value="" />
+		
+		<div id="divProjectTitle">
+			
+			<table id="formTable">
+				<tr>
+					<td class="dim"></td>
+					<td class="dim"></td>
+					<td class="dim"></td>
+					<td class="dim"></td>
+				</tr>
+				<tr>
+					<td width="20%"  >
+						<label>Project Title: </label>
+					</td>
+					<td colspan="2">
+						<input type="text" name="projectName" size="80" value="<?php echo $this->oProject->project_title; ?>" />
+					</td>
+					
+					<td valign="top"rowspan="2" style="padding-left: 50px;">
+						<input id="btnSaveProject" type="button" name="btnSave" value="Save" /><br /><br />
+						<input id="btnPreviewProject" type="button" name="btnPreview" value="Preview" />
+					</td>
+				</tr>
+				
+				<tr>
+					<td><label>URL: </label></td>
+					<td colspan="2">
+						<input type="text" name="addressBar" value="<?php echo $this->oProject->url; ?>" size="50" />
+						<input id="btnBrowse" type="button" name="GO" value="GO!" /> <!-- document.location = '<?php echo $this->url(); ?>/?addressBar=' + $('input[name$=addressBar]').val(); -->
+					</td>
+				</tr>
+				<?php if(isset($this->internalUrls) && !empty($this->internalUrls)): ?>
+				<tr>
+					<td><label>Internal URL's:</label></td>
+					<td>
+						<select id="AdsLink" name="ads_url" >
+							<option value="0">-- Select URL --</option>
+						<?php $i = 0; foreach($this->internalUrls as $iu):?>
+							<?php $i++; ?>
+							<option value="<?php echo $iu; ?>" <?php if($this->adsUrl == $iu): ?>selected="selected"<?php endif;?> >ADS <?php echo $i; ?></option>
+						<?php endforeach;?>
+						</select>
+					</td>
+				</tr>
+				<?php else: ?>
+				<tr>
+					<td colspan="2">&nbsp;</td>
+				</tr>
+				<?php endif;?>
+				
+				<tr>
+					<td width="20%" ><label>Categories:</label></td>
+					<td>
+						<select id="category" name="category" >
+							<option value="">--Select Category--</option>
+					<?php $i = 0; foreach($this->categories->toArray() as $v): ?>
+						<?php $i++; ?>
+						<?php if($v['parent_id']==0): ?>
+							<optgroup label="<?php echo $v['Translation'][0]['name']; ?>">
+							<?php foreach($v['Children'] as $vc): ?>
+								<?php //echo '<pre>'; die(var_dump($vc)); ?>
+								<option value="<?php echo $vc['id']; ?>" <?php if ($this->categoryId==$vc['id']): ?>selected<?php endif; ?>><?php echo $vc['Translation'][0]['name']; ?></option>
+							<?php endforeach; ?>
+							
+							<?php if( ($i != count($this->categories) && $v['parent_id'] != $categories[$i]['parent_id']) || ($i == count($this->categories) && $v->parent_id != 0)): ?>
+							</optgroup>
+							<?php endif; ?>
+						<?php endif; ?>
+					<?php endforeach; ?>
+						</select>
+					</td>
+					
+					<td valign="top" colspan="2" rowspan="2" style="padding-left: 50px;">
+						
+					</td>
+				</tr>							
+
+			</table>
+			
+		</div>
+		
+		<br class="clear" />
+		<div>
+			<table cellpadding="3" width="100%">
+				<tr>
+					<td width="20%"  align="right"><label for="nopic" >No Picture</label></td>
+					<td><input type="text" name="nopic" size="80" value="<?php echo $this->oProject->nopic; ?>" /></td>
+				</tr>
+						
+			
+				<?php foreach($this->fields as $f):?>
+					<?php if($f['caption']==='add_link'): ?>
+				<tr>
+					<td width="20%"  align="right"><label for="<?php echo $f['caption']; ?>" ><?php echo $f['Translation'][0]['name']; ?></label></td>
+					<td><input id="<?php echo $f['caption']; ?>" class="trackStatus" size="100" type="text" name="projectFields[<?php echo $f['caption']; ?>]" value="<?php echo $this->oProject->getFieldXquery($f['caption'], 'fields'); ?>" /></td>
+				</tr>
+					<?php else: ?>
+				<tr>
+					<td align="right"><label for="<?php echo $f['caption']; ?>" ><?php echo $f['Translation'][0]['name']; ?></label></td>
+					<td><input id="<?php echo $f['caption']; ?>" class="trackStatus" size="80" type="text" name="projectFields[<?php echo $f['caption']; ?>]" value="<?php echo $this->oProject->getFieldXquery($f['caption'], 'fields'); ?>" /></td>
+				</tr>
+					<?php endif;?>
+				
+				<?php endforeach;?>
+			
+				<tr><td colspan="2">&nbsp;</td></tr>
+				
+				<?php foreach($this->fieldsAds as $f): ?>
+				<tr>
+					<td width="20%"  align="right" valign="top" ><label for="<?php echo $f['caption']; ?>"><?php echo $f['Translation'][0]['name']; ?></label></td>
+					<td>	
+						<div id="main__<?php echo $f['caption']; ?>">
+							<input id="<?php echo $f['caption']; ?>" class="trackStatus" size="80" type="text" name="projectFieldsAds[<?php echo $f['caption']; ?>]" value="<?php echo $this->oProject->getFieldXquery($f['caption'], 'fieldsAds'); ?>" />
+							<input class="btnAdd" type="button" value="+" />
+							<input class="btnDel" type="button" value="-" />
+						</div>
+						<?php $addFields =  $this->oProject->getFieldAdsXqueryAdd($f['caption'], 'fieldsAds'); ?>
+						<div id="cloned__<?php echo $f['caption']; ?>" style="margin-bottom: 10px;">
+						<?php foreach($addFields as $k => $v): ?>
+							<input id="<?php echo $k; ?>" class="trackStatus tsAdd" type="text" value="<?php echo $v; ?>" name="projectFieldsAds[<?php echo $k; ?>]" size="80">
+							<br />
+						<?php endforeach; ?>
+						</div>
+					</td>
+				</tr>
+				<?php endforeach;?>
+				
+				<tr><td colspan="2">&nbsp;</td></tr>
+				
+
+				<? $aPics = $this->oProject->fieldsAdsPictures->toArray(); ?>
+				<tr>
+					<td colspan="2">
+						<div id="picture_labels" style="margin-left:20%;">
+							<div style="width: 25ex; text-align:center; float: left;">xQuery:</div><div style="width: 25ex; text-align:center; float: left;">Reg Expression:</div> <div style="width: 25ex; text-align:center; float: left;" >Replace with:</div>
+						</div>
+
+					</td>
+				</tr>
+				<tr>
+					<td width="20%" align="right" valign="top"><label>Pictures</label></td>
+					<td>
+						<div id="main__pictures">
+							<input id="pictures_xpath" class="trackStatus" type="text" name="projectFieldsAdsPictures[0][xquery]" value="<?php if(isset($aPics[0])) echo $aPics[0]['xquery']; ?>" size="25" />
+							<input id="pictures_regex" class="trackStatus" type="text" name="projectFieldsAdsPictures[0][regex]" value="<?php if(isset($aPics[0])) echo stripslashes($aPics[0]['regex']); ?>" size="25" />
+							<input id="pictures_replace" class="trackStatus" type="text" name="projectFieldsAdsPictures[0][replace]" value="<?php if(isset($aPics[0]))  echo stripslashes($aPics[0]['replace']); ?>" size="25" />
+							<input class="btnAddPicture" type="button" value="+" />
+							<input class="btnDelPicture" type="button" value="-" />
+						</div>
+						<div id="cloned__pictures" style="margin-bottom: 10px;">
+						<? for($i=1; $i<count($aPics); $i++): ?>
+							<input id="pictures_xpath_<?php echo $i; ?>" class="trackStatus" type="text" name="projectFieldsAdsPictures[<?php echo $i; ?>][xquery]" value="<?php echo $aPics[$i]['xquery']; ?>" size="25" />
+							<input id="pictures_regex_<?php echo $i; ?>" class="trackStatus" type="text" name="projectFieldsAdsPictures[<?php echo $i; ?>][regex]" value="<?php echo $aPics[$i]['regex']; ?>" size="25" />
+							<input id="pictures_replace_<?php echo $i; ?>" class="trackStatus" type="text" name="projectFieldsAdsPictures[<?php echo $i; ?>][replace]" value="<?php echo $aPics[$i]['replace']; ?>" size="25" />
+							<br />
+						<? endfor; ?>
+						</div>
+					</td>
+				</tr>		
+				<tr><td colspan="2">&nbsp;</td></tr>
+				
+			</table>
+		</div>
+	</form>
+	
+<!--/ edit.phtml -->
