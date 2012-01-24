@@ -1,0 +1,39 @@
+<?php echo $this->doctype(); ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>.:: Advertize Parser ::.</title>
+        
+        <script type="text/javascript" src="/JQuery/jquery-1.6.min.js" ></script>
+        
+        <!-- PHP JS -->
+        <script type="text/javascript" src="/php.js/var_dump.js" ></script>
+        <script type="text/javascript" src="/php.js/echo.js" ></script>
+        <script type="text/javascript" src="/php.js/trim.js" ></script>
+        <!-- <script type="text/javascript" src="/php.js/rtrim.js"></script> -->
+		<script type="text/javascript" src="/php.js/serialize.js"></script>
+		
+		<script type="text/javascript" src="/php.js/explode.js"></script>
+	
+		<link rel="stylesheet" type="text/css" href="/css/style.css" > 
+    </head>
+    <body>
+	    <div id="headContainer">
+			<div id="rightHead">
+				<a href="/login/logout">Logout</a>&nbsp;&nbsp;&nbsp;	
+			<?php if($this->actionName == 'list'): ?>
+				<a href="/index/edit">Create Project</a>
+			<?php else:?>
+				<a href="/index/list">List Projects</a>
+			<?php endif;?>
+			</div>
+		</div>
+    
+    
+    
+    	<div id="mainContainer">
+			<?php echo $this->layout()->content; ?>
+            <br class="clear" />
+        </div><!-- end of mainContainer -->
+    </body>
+</html>

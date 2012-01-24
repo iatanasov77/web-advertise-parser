@@ -1,0 +1,20 @@
+Model_User:
+  User_1:
+    name: Jon
+    email: jon@lebensold.ca
+    phone: 1234567
+    Car: Car_2
+  User_2:
+    name: Jane
+    email: jane@doe.com
+    Car: Car_1
+
+Model_Car:
+  Car_1:
+    brand: Toyota
+  Car_2:
+    brand: Nissan
+  Car_3:
+    brand: Chevy
+  Car_4:
+    brand: Ford

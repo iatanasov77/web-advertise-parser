@@ -1,0 +1,32 @@
+<!-- preview.phtml -->
+
+		<div>
+			<a href="/index/edit/project/<?php echo $this->iProjectId; ?>">Back to Add</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="<?php echo $this->baseUrl(); ?>/index/run/project/<?php echo $this->iProjectId; ?>">Run Add</a>
+		</div>
+		<div>
+			<table id="formTable">
+				<tr>
+					<td colspan="2">Preview Fields:</td>
+				</tr>
+			<?php $previewIndex = 0; ?>	
+			<?php foreach($this->allAds[$previewIndex] as $k => $v):?>
+				<?php if($k == 'pictures') continue; ?>
+				<tr>
+					<td><?php echo $k; ?>: </td>
+					<td><?php echo $v; ?> </td>
+						
+				</tr>
+			<?php endforeach; ?>	
+		
+			<?php foreach($this->allAds[$previewIndex]['pictures'] as $v):?>
+				<tr>
+					<td>Picture 1: </td>
+					<td><img src="<?php echo $v; ?>" /> </td>	
+				</tr>
+			<?php endforeach; ?>	
+		
+			</table>
+		</div>
+		
+<!--/ edit.phtml -->
