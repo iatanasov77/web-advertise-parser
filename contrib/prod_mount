@@ -1,2 +1,2 @@
 #!/bin/bash
-lufsmount ftp://vtorarak:E8n64_Vtora@ftp.vtoraraka.bg/public_html /home/vanko/Projects/www/SvetlioProject/production_server
+lufsmount ftpfs://vtorarak:E8n64_Vtora@ftp.vtoraraka.bg/public_html /home/vanko/FtpMount/vtoraraka.bg
