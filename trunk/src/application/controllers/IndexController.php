@@ -2,7 +2,7 @@
 
 /**
  * 
- * @author vanko
+ * @author I. Atanasov <i.atanasov77@gmail.com>
  */
 class IndexController extends Zend_Controller_Action
 {
@@ -12,7 +12,6 @@ class IndexController extends Zend_Controller_Action
 	 */
 	public function init()
 	{
-		//$identity = Zend_Auth::getInstance()->getIdentity();
     	if (!Zend_Auth::getInstance()->hasIdentity()) {
     		$this->_helper->redirector('index', 'login');
     	}
@@ -62,10 +61,10 @@ class IndexController extends Zend_Controller_Action
     	$adsUrl =  0;
     
 		Doctrine_Core::debug(true);
-		$queryDebug = new VS_Doctrine_QueryDebugListener();
-		$conn = Doctrine_Manager::connection();
-		$conn->addListener($queryDebug);
-		$conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, true);
+		//$queryDebug = new VS_Doctrine_QueryDebugListener();
+		//$conn = Doctrine_Manager::connection();
+		//$conn->addListener($queryDebug);
+		//$conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, true);
 
     	/*
     	 * List with Charset Encodings

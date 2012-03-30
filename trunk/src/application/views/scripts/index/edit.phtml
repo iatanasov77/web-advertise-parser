@@ -156,15 +156,34 @@
 
 				<? $aPics = $this->oProject->fieldsAdsPictures->toArray(); ?>
 				<tr>
+					<td style="padding-top: 23px;" align="right" valign="top">Crop Pictures</td>
+					<td>
+						<table style="margin: 0 0 10px;" cellspacing="0" cellpadding="0">
+							<tr>
+								<td align="center">Top</td>
+								<td align="center">Right</td>
+								<td align="center">Bottom</td>
+								<td align="center">Left</td>
+							</tr>
+							<tr>
+								<td><input type="text" id="" name="" value="" size="10" /></td>
+								<td><input type="text" id="" name="" value="" size="10" /></td>
+								<td><input type="text" id="" name="" value="" size="10" /></td>
+								<td><input type="text" id="" name="" value="" size="10" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
 					<td colspan="2">
-						<div id="picture_labels" style="margin-left:20%;">
+						<div id="picture_labels" style="margin-left:17%;">
 							<div style="width: 25ex; text-align:center; float: left;">xQuery:</div><div style="width: 25ex; text-align:center; float: left;">Reg Expression:</div> <div style="width: 25ex; text-align:center; float: left;" >Replace with:</div>
 						</div>
 
 					</td>
 				</tr>
 				<tr>
-					<td width="20%" align="right" valign="top"><label>Pictures</label></td>
+					<td align="right" valign="top">Pictures</td>
 					<td>
 						<div id="main__pictures">
 							<input id="pictures_xpath" class="trackStatus" type="text" name="projectFieldsAdsPictures[0][xquery]" value="<?php if(isset($aPics[0])) echo $aPics[0]['xquery']; ?>" size="25" />
