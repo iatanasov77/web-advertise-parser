@@ -25,6 +25,11 @@ class Model_Base_ParserProject extends Doctrine_Record
         $this->hasColumn('project_title', 'string', 128);
         $this->hasColumn('nopic', 'string', 128);
         
+        $this->hasColumn('picture_crop_top', 'integer', 3);
+        $this->hasColumn('picture_crop_right', 'integer', 3);
+        $this->hasColumn('picture_crop_bottom', 'integer', 3);
+        $this->hasColumn('picture_crop_left', 'integer', 3);
+        
         $this->hasColumn('active', 'integer', 1);
         
         /* Indexes */

@@ -77,6 +77,10 @@ class SvProject_Parser
     	$fetchedFields = array();
     	
     	$pUrls = $oProject->getInternalUrls();
+    	if(empty($pUrls)) {
+    		return array();	// return empty 'allAds'. I don't know if this don't break something else.
+    		throw new Exception("ERROR - Fetching Internal URL's.");
+    	}
     	
     	/**
     	 * All Saved Ads URLS for this projects
@@ -159,10 +163,13 @@ class SvProject_Parser
     
     /**
      * 
-     * @param $pictureRemote
+     * @param string $pictureRemote
+     * @param string $picSource
      */
-    function savePicture($pictureRemote, $picSource)
+    function savePicture($pictureRemote, $picSource, $oProject)
     {
+    	$config = Zend_Registry::get('config');
+    	
     	$pictureField['remote'] = $pictureRemote;
     	$fileParts = explode('.', $pictureField['remote']);
     	$ext = $fileParts[count($fileParts)-1];
@@ -178,12 +185,12 @@ class SvProject_Parser
     	$thmbWidth = 70;
     	$bigThmbHeight = 300;
     	$imgCompression = 75;
+    
     	
-		$docRoot = '/home/vtorarak/public_html';
-
-    	$picPath 		= $docRoot . '/images/listings/' . $pictureField['local'];				// Original Size
-    	$thmbPath 		= $docRoot . '/images/listings/thmb/' . $pictureField['local'];			// 93 X 70
-    	$bigThmbPath 	= $docRoot . '/images/listings/bigThmb/' . $pictureField['local'];		// 400 X 300
+		$picturesPath   = $config->picturesPath;
+    	$picPath 		= $picturesPath . DIRECTORY_SEPARATOR . $pictureField['local'];				// Original Size
+    	$thmbPath 		= $picturesPath . DIRECTORY_SEPARATOR . 'thmb' . DIRECTORY_SEPARATOR . $pictureField['local'];			// 93 X 70
+    	$bigThmbPath 	= $picturesPath . DIRECTORY_SEPARATOR . 'bigThmb' . DIRECTORY_SEPARATOR . $pictureField['local'];		// 400 X 300
     	
     	if($picFile = @fopen($picPath, 'w')) {
     		$ok = @fwrite($picFile, $picSource);
@@ -219,6 +226,44 @@ class SvProject_Parser
             }
             $srcWidth = imagesx($srcImage);
             $srcHeight = imagesy($srcImage);
+            
+            
+            /*
+             * Crop Image
+             */
+            if($oProject->picture_crop_top || $oProject->picture_crop_right || $oProject->picture_crop_bottom || $oProject->picture_crop_left) {
+				// New image size
+				$cropWidth  = $srcWidth - (int)$oProject->picture_crop_right - (int)$oProject->picture_crop_left;
+				$cropHeight = $srcHeight - (int)$oProject->picture_crop_top - (int)$oProject->picture_crop_bottom;
+				
+				// Starting point of crop
+				$cropX = (int)$oProject->picture_crop_left;
+				$cropY = (int)$oProject->picture_crop_top;
+				
+				$canvas = imagecreatetruecolor($cropWidth, $cropHeight);
+				imagecopy($canvas, $srcImage, 0, 0, $cropX, $cropY, $cropWidth, $cropHeight);
+				
+	            if( $imgType == IMAGETYPE_JPEG ) {
+	                if(imagejpeg($canvas, $picPath, $imgCompression)) {
+	                	$srcImage = imagecreatefromjpeg($picPath);
+	                }
+	            } elseif( $imgType == IMAGETYPE_GIF ) {
+	                if(imagegif($canvas, $picPath)) {
+	                	$srcImage = imagecreatefromgif($picPath);
+	                }
+	            } elseif( $imgType == IMAGETYPE_PNG ) {
+	                if(imagepng($canvas, $picPath)) {
+	                	$srcImage = imagecreatefrompng($picPath);
+	                }
+	            }
+	            
+	            /*
+	             * If crop is successful
+	             */
+	            $srcWidth = $cropWidth;
+            	$srcHeight = $cropHeight;
+            }
+            
             
             /**
              * Create thumbnail
@@ -275,7 +320,6 @@ class SvProject_Parser
     	    $oAds = new Model_Ads();
     	    $oAds->parser_project_id = $oProject->id;
     	    foreach($add as $k => $v) {
-	    		//if($k == 'pictures') continue;
 	    		if(!isset($oAds->$k)) continue;
 	    		
 	    		if($k == 'price') {
@@ -283,7 +327,6 @@ class SvProject_Parser
 	    		}
 	    		
 	    		$oAds->$k = $v;
-	    		//$oAds->$k = iconv('CP1251', 'UTF-8', , $v);
 	    	}
 	    	
 	    	$oAds->user_id = $oProject->user_id;
@@ -312,15 +355,12 @@ class SvProject_Parser
     	    	$picSource = $oProject->getUrlContent($pic);
     	    	
 	    		// $pic  sadarja remote url
-	    		if($localFile = $this->savePicture($pic, $picSource)) {
+	    		if($localFile = $this->savePicture($pic, $picSource, $oProject )) {
 	    			$oAdsPicture = new Model_AdsPicture();
 	    			$oAdsPicture->ad_id = $oAds->id;
 	    			$oAdsPicture->picture = $localFile;
 	    			$oAdsPicture->order_no = ++$n;
 	    			$oAdsPicture->save();
-	    			
-	    			//$aPictureIds[] = $oAdsPicture->id;
-	    			//$oAdsPicture->link('ads', array($oAds->id));
 	    		}
         	}
         	

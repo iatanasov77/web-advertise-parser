@@ -8,7 +8,17 @@ class SvProject_ParserCli
     {
     	$oParser = new SvProject_Parser();
     	
-        return $oParser->run();
+    	if(count($_SERVER['argv']) > 1) {
+    		$projects = explode(',', $_SERVER['argv'][1]);
+    		foreach($projects as $p) {
+    			$oParser->run($p);
+    		}
+    	}
+    	else {
+    		$oParser->run();
+    	}
+    	
+        return true;
     }
     
 };
