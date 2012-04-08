@@ -152,9 +152,6 @@
 				<?php endforeach;?>
 				
 				<tr><td colspan="2">&nbsp;</td></tr>
-				
-
-				<? $aPics = $this->oProject->fieldsAdsPictures->toArray(); ?>
 				<tr>
 					<td style="padding-top: 23px;" align="right" valign="top">Crop Pictures</td>
 					<td>
@@ -166,10 +163,10 @@
 								<td align="center">Left</td>
 							</tr>
 							<tr>
-								<td><input type="text" id="" name="" value="" size="10" /></td>
-								<td><input type="text" id="" name="" value="" size="10" /></td>
-								<td><input type="text" id="" name="" value="" size="10" /></td>
-								<td><input type="text" id="" name="" value="" size="10" /></td>
+								<td><input type="text" id="" name="picture_crop_top" value="<?php echo $this->oProject->picture_crop_top; ?>" size="10" /></td>
+								<td><input type="text" id="" name="picture_crop_right" value="<?php echo $this->oProject->picture_crop_right; ?>" size="10" /></td>
+								<td><input type="text" id="" name="picture_crop_bottom" value="<?php echo $this->oProject->picture_crop_bottom; ?>" size="10" /></td>
+								<td><input type="text" id="" name="picture_crop_left" value="<?php echo $this->oProject->picture_crop_left; ?>" size="10" /></td>
 							</tr>
 						</table>
 					</td>
@@ -193,6 +190,7 @@
 							<input class="btnDelPicture" type="button" value="-" />
 						</div>
 						<div id="cloned__pictures" style="margin-bottom: 10px;">
+						<? $aPics = $this->oProject->fieldsAdsPictures->toArray(); ?>
 						<? for($i=1; $i<count($aPics); $i++): ?>
 							<input id="pictures_xpath_<?php echo $i; ?>" class="trackStatus" type="text" name="projectFieldsAdsPictures[<?php echo $i; ?>][xquery]" value="<?php echo $aPics[$i]['xquery']; ?>" size="25" />
 							<input id="pictures_regex_<?php echo $i; ?>" class="trackStatus" type="text" name="projectFieldsAdsPictures[<?php echo $i; ?>][regex]" value="<?php echo $aPics[$i]['regex']; ?>" size="25" />

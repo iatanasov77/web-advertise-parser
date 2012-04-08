@@ -57,5 +57,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		$view->doctype('XHTML1_TRANSITIONAL');
     }
 
+    protected function _initConfig()
+    {
+    	$config = new Zend_Config_Ini(SITE_ROOT.'/application/configs/application.ini', APPLICATION_ENV);
+		Zend_Registry::set('config', $config);
+    	
+    }
 };
 

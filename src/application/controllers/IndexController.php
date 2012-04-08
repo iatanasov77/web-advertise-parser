@@ -60,11 +60,11 @@ class IndexController extends Zend_Controller_Action
     	$url = '';
     	$adsUrl =  0;
     
-		Doctrine_Core::debug(true);
-		//$queryDebug = new VS_Doctrine_QueryDebugListener();
-		//$conn = Doctrine_Manager::connection();
-		//$conn->addListener($queryDebug);
-		//$conn->setAttribute(Doctrine_Core::ATTR_QUOTE_IDENTIFIER, true);
+    	/*
+    	 * Е тва логва всички заявки в /tmp/doctrine_debug
+    	 */
+		$conn = Doctrine_Manager::connection();
+		$conn->addListener(new VS_Doctrine_QueryDebugListener());
 
     	/*
     	 * List with Charset Encodings
@@ -316,7 +316,6 @@ class IndexController extends Zend_Controller_Action
      */
 	private function _initProject(&$pr, $params)
     {
-    	$pr->nopic = $params['nopic'];
     	$pr->project_title = $params['projectName'];
     	$pr->url = $params['addressBar'];
  
@@ -324,6 +323,16 @@ class IndexController extends Zend_Controller_Action
     	//$pr->category = Doctrine_Core::getTable('Model_Category')->findOneBy('id', $params['category']);
     	$pr->link('user', array(Zend_Auth::getInstance()->getIdentity()));
     	$pr->link('category', array($params['category']));
+    	
+    	$pr->nopic = $params['nopic'];
+    	
+    	/*
+    	 * Crop Picture Settings
+    	 */
+    	$pr->picture_crop_top = $params['picture_crop_top'];
+    	$pr->picture_crop_right = $params['picture_crop_right'];
+    	$pr->picture_crop_bottom = $params['picture_crop_bottom'];
+    	$pr->picture_crop_left = $params['picture_crop_left'];
     	
     	$i = 0;
     	foreach($params['projectFields'] as $pKey => $pVal) {
